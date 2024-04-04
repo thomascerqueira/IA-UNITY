@@ -134,11 +134,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94346689049ee4011911bf2801e579c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 10
   cooldown: 1
+  frameAttack: 15
   attackCollider: {fileID: 5881138536147525758}
   model: {fileID: 0}
   attackColor: {r: 0, g: 1, b: 0, a: 1}
-  frameAttack: 15
   isAttacking: 0
   isInCooldown: 0
 --- !u!114 &5881138535125080646
@@ -190,6 +191,8 @@ MonoBehaviour:
   MaxStep: 3000
   speed: 5
   spawnPoint: {fileID: 0}
+  goodDistance: 0.5
+  health: 100
 --- !u!114 &5881138535125080643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,7 +301,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5881138536147525756}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 1.0063064
