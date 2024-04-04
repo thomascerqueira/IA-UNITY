@@ -13,22 +13,32 @@ public class Fighter : Agent
 {
     [Header("Fighter Settings")]
     [SerializeField] float speed = 5f;
+    [SerializeField] GameObject spawnPoint;
+    [SerializeField] private float goodDistance = 0.5f;
 
-    private Vector3 initialPosition;
     private Rigidbody rb;
     private Attack attackComponent;
+    private Fighter opponent;
 
     [ContextMenu("Reset")]
 
     private void Start() {
-        initialPosition = transform.localPosition;
         attackComponent = GetComponent<Attack>();
         rb = GetComponent<Rigidbody>();
+
+        foreach (Transform child in transform.parent) {
+            if (child != transform && child.TryGetComponent<Fighter>(out Fighter fighter)) {
+                opponent = fighter;
+            }
+        }
+        if (opponent == null) {
+            Debug.LogError("Fighter: Start: No opponent found");
+        }
     }
 
     public override void OnEpisodeBegin()
     {
-        transform.localPosition = new Vector3(0, initialPosition.y, 0);
+        transform.localPosition = spawnPoint.transform.localPosition;
 
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -60,14 +70,24 @@ public class Fighter : Agent
         }
     }
 
+    private float getDistanceToOpponent() {
+        return Vector3.Distance(transform.localPosition, opponent.transform.localPosition);
+    }
+
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
         Vector3 direction = Move(actionBuffers);
         Attack(actionBuffers);
+        float distanceToOpponent = getDistanceToOpponent();
 
         // Reward for moving
         if (direction != Vector3.zero) {
             AddReward(0.001f);
+        }
+
+        // Reward for being close to the opponent
+        if (distanceToOpponent < goodDistance) {
+            AddReward(0.01f);
         }
     }
 
